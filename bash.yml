@@ -1,0 +1,29 @@
+---
+- name: Configure bash script for sen mail
+  hosts: all
+  become: true
+
+  tasks:
+  - name: Copy bash script
+    ansible.builtin.copy:
+      src: ~/bash/send-mail.sh
+      dest: /opt/
+      mode: 0755
+      owner: root
+      group: root
+      remote_src: no
+
+  - name: Copy corn file
+    ansible.builtin.copy:
+      src: ~/bash/crontab
+      dest: /etc/
+      mode: 644
+      owner: root
+      group: root
+      remote_src: no
+
+  handlers:
+  - name: Restart service
+    ansible.builtin.systemd:
+      name: cron.service
+      state: restarted
